@@ -1,0 +1,21 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+    <h2 class="text-center text-info", font-weight="bold">Gestion playlist<h2>
+    <h3>{{ playlist.name }} </h3>        
+    {{ form_start(formplaylist) }}        
+    {{ form_end(formplaylist) }}
+
+    <div class="row">
+        <h4>Formations liées à la playlist :</h4>
+        <div class="row">
+            {% if playlist.formations|length > 0 %}
+                <p>{% for formation in playlist.formations %}                           
+                    {{ formation.title }}<br />
+                   {% endfor %}
+                </p>
+            {% else %}
+                <p><i>Aucunes formations présentes dans cette playlist</i></p>
+            {% endif %}
+        </div>
+{% endblock %}

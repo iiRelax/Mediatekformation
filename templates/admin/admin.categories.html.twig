@@ -1,0 +1,61 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+    <h3 class="text-center text-info">Gestion des catégories</h3>
+    {% for label, messages in app.flashes %}
+    <div class="alert alert-info alert-dismissible fade show flash-{{ label }}">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {% endfor %}
+    </div>
+{% endfor %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Ajouter une nouvelle catégorie:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                        Saisissez le nom de la catégorie :
+                </td>
+                <form class="form-inline mt-1" method="POST" action="{{ path('admin.categorie.ajout') }}">
+                <td>
+                    
+                    <input type="text" name="nom" method="POST"></input>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Catégories 
+                </th>                
+                <th>
+                     Actions
+                </th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for categorie in categories %}
+                <tr>
+                    <td>                    
+                            {{ categorie.name }}                        
+                    </td>
+                    <td>                        
+                        <a href="{{ path('admin.categories.suppr', {id:categorie.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer {{ categorie.name }} ?')" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

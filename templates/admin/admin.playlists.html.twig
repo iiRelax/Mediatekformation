@@ -1,0 +1,45 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+    <p class="text-end">
+        <a href="{{ path('admin.playlist.ajout') }}" , class="btn btn-primary">
+            Ajouter une nouvelle playlist
+        </a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Playlist<br />
+                    <a href="{{ path('admin.playlists.sort', {champ:'name', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('admin.playlists.sort', {champ:'name', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                    <form class="form-inline mt-1" method="POST" action="{{ path('admin.playlists.findallcontain', {champ:'name'}) }}">
+                        <div class="form-group mr-1 mb-2">
+                            <input type="text" class="sm" name="recherche" 
+                                   value="{% if valeur|default and not table|default %}{{ valeur }}{% endif %}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('filtre_name') }}">
+                            <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
+                        </div>
+                    </form> 
+                </th>                             
+                <th>
+                     Actions
+                </th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for playlist in playlists %}
+                <tr>
+                    <td>
+                        {{ playlist.name }}
+                    </td>                                             
+                    <td>
+                    <a href="{{ path('admin.playlist.edit', {id:playlist.id}) }}" class="btn btn-secondary">Editer</a>
+                    <a href="{{ path('admin.playlist.suppr', {id:playlist.id}) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer {{ playlist.name }} ? Cela supprimera également les formations associées.')" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

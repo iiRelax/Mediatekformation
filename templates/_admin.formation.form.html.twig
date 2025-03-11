@@ -1,0 +1,23 @@
+{{ form_start (formformation) }}
+<div class="row">
+    <div class="col">
+        {{ form_row(formformation.title) }}
+    </div>    
+</div>
+<div class="row">
+    <div class="col">
+        {{ form_row(formformation.publishedAt) }}
+        {{ form_row(formformation.playlist) }}        
+    </div>
+    <div class="col">
+        <div>            
+            {{ form_row(formformation.categories) }}
+        </div>
+    </div>      
+<div class="row">
+    <div class="col">
+        {{ form_row(formformation.description) }}
+    </div>
+</div>
+{{ form_end(formformation) }}
+
