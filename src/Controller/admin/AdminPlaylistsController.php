@@ -68,10 +68,10 @@ class AdminPlaylistsController extends AbstractController {
      */
     #[Route("/admin/playlist/suppr/{id}", name:"admin.playlist.suppr")]
     public function suppr(Playlist $playlist) {
-        
+        $nom = $playlist->getName();
         $this->playlistRepository->remove($playlist, true);
+        $this->addFlash('success', 'La suppression de la playlist "' . $nom . '" a été effectuée avec succès.');
         return $this->redirectToRoute('admin.playlists');
-        
     }
     
     /**
@@ -86,6 +86,7 @@ class AdminPlaylistsController extends AbstractController {
         $formPlaylist->handleRequest($request);
         if ($formPlaylist->isSubmitted() && $formPlaylist->isValid()) {
             $this->playlistRepository->add($playlist, true);
+            $this->addFlash('success', 'La playlist "' . $playlist->getName() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('admin.playlists');
         }
         return $this->render("admin/admin.playlist.ajout.html.twig",
@@ -106,6 +107,7 @@ class AdminPlaylistsController extends AbstractController {
         $formPlaylist->handleRequest($request);
         if ($formPlaylist->isSubmitted() && $formPlaylist->isValid()) {
             $this->playlistRepository->add($playlist, true);
+            $this->addFlash('success', 'La playlist "' . $playlist->getName() . '" a été modifiée avec succès.');
             return $this->redirectToRoute('admin.playlists');
         }
         return $this->render("admin/admin.playlist.edit.html.twig",

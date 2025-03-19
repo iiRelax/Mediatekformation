@@ -63,7 +63,9 @@ class AdminFormationsController extends AbstractController {
      */
     #[Route('/admin/formation/suppr/{id}', name:'admin.formation.suppr')]
     public function suppr(Formation $formation) {
+        $titre = $formation->getTitle();
         $this->formationRepository->remove($formation, true);
+        $this->addFlash('success', 'La suppression de la formation "' . $titre . '" a été effectuée avec succès.');
         return $this->redirectToRoute('admin.formations');
     }
     
@@ -80,6 +82,7 @@ class AdminFormationsController extends AbstractController {
         $formFormation->handleRequest($request);
         if($formFormation->isSubmitted() && $formFormation->isValid()){
             $this->formationRepository->add($formation, true);
+            $this->addFlash('success', 'La formation "' . $formation->getTitle() . '" a été ajoutée avec succès.');
             return $this->redirectToRoute('admin.formations');
         }
         
@@ -101,6 +104,7 @@ class AdminFormationsController extends AbstractController {
         $formFormation->handleRequest($request);
         if($formFormation->isSubmitted() && $formFormation->isValid()){
             $this->formationRepository->add($formation, true);
+            $this->addFlash('success', 'La formation "' . $formation->getTitle() . '" a été modifiée avec succès.');
             return $this->redirectToRoute('admin.formations');
         }
         
