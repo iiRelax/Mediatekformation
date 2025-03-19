@@ -17,20 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaylistsController extends AbstractController {
     
     /**
-     * Constantes pour les chemins et templates
-     */
-    private const ROUTE_PLAYLISTS = '/playlists';
-    private const ROUTE_PLAYLISTS_TRI = '/playlists/tri/{champ}/{ordre}';
-    private const ROUTE_PLAYLISTS_RECHERCHE = '/playlists/recherche/{champ}/{table}';
-    private const ROUTE_PLAYLISTS_SHOWONE = '/playlists/playlist/{id}';
-    
-    private const TEMPLATE_PLAYLISTS = "pages/playlists.html.twig";
-    private const TEMPLATE_PLAYLIST = "pages/playlist.html.twig";
-    
-    private const CHAMP_NAME = "name";
-    private const CHAMP_FORMATIONS = "formations";
-    
-    /**
      * 
      * @var PlaylistRepository
      */
@@ -48,6 +34,8 @@ class PlaylistsController extends AbstractController {
      */
     private $categorieRepository;    
     
+    const PLAYLISTS_TWIG_PATH = "pages/playlists.html.twig";
+    
     function __construct(PlaylistRepository $playlistRepository, 
             CategorieRepository $categorieRepository,
             FormationRepository $formationRespository) {
@@ -60,41 +48,41 @@ class PlaylistsController extends AbstractController {
      * @Route("/playlists", name="playlists")
      * @return Response
      */
-    #[Route(self::ROUTE_PLAYLISTS, name: 'playlists')]
+    #[Route('/playlists', name: 'playlists')]
     public function index(): Response{
-        $playlists = $this->playlistRepository->findAllOrderByName('ASC');        
-        $categories = $this->categorieRepository->findAll();        
-        return $this->render(self::TEMPLATE_PLAYLISTS, [
-            'playlists' => $playlists,             
+        $playlists = $this->playlistRepository->findAllOrderByName('ASC');
+        $categories = $this->categorieRepository->findAll();
+        return $this->render(self::PLAYLISTS_TWIG_PATH, [
+            'playlists' => $playlists,
             'categories' => $categories            
         ]);
     }
 
-    #[Route(self::ROUTE_PLAYLISTS_TRI, name: 'playlists.sort')]
+    #[Route('/playlists/tri/{champ}/{ordre}', name: 'playlists.sort')]
     public function sort($champ, $ordre): Response{
         switch($champ){
-            case self::CHAMP_NAME:
+            case "name":
                 $playlists = $this->playlistRepository->findAllOrderByName($ordre);
                 break;
-            case self::CHAMP_FORMATIONS:
-                $playlists = $this->playlistRepository->findAllOrderByFormation($ordre);
+            case "formations":
+                $playlists = $this->playlistRepository->findAllOrderByFormations($ordre);
                 break;
             default:
-                return $this->findAll();
+                break;
         }
         $categories = $this->categorieRepository->findAll();
-        return $this->render(self::TEMPLATE_PLAYLISTS, [
+        return $this->render(self::PLAYLISTS_TWIG_PATH, [
             'playlists' => $playlists,
             'categories' => $categories            
         ]);
     }          
 
-    #[Route(self::ROUTE_PLAYLISTS_RECHERCHE, name: 'playlists.findallcontain')]
+    #[Route('/playlists/recherche/{champ}/{table}', name: 'playlists.findallcontain')]
     public function findAllContain($champ, Request $request, $table=""): Response{
         $valeur = $request->get("recherche");
         $playlists = $this->playlistRepository->findByContainValue($champ, $valeur, $table);
         $categories = $this->categorieRepository->findAll();
-        return $this->render(self::TEMPLATE_PLAYLISTS, [
+        return $this->render(self::PLAYLISTS_TWIG_PATH, [
             'playlists' => $playlists,
             'categories' => $categories,            
             'valeur' => $valeur,
@@ -102,16 +90,16 @@ class PlaylistsController extends AbstractController {
         ]);
     }  
 
-    #[Route(self::ROUTE_PLAYLISTS_SHOWONE, name: 'playlists.showone')]
+    #[Route('/playlists/playlist/{id}', name: 'playlists.showone')]
     public function showOne($id): Response{
         $playlist = $this->playlistRepository->find($id);
         $playlistCategories = $this->categorieRepository->findAllForOnePlaylist($id);
         $playlistFormations = $this->formationRepository->findAllForOnePlaylist($id);
-        return $this->render(self::TEMPLATE_PLAYLIST, [
+        return $this->render("pages/playlist.html.twig", [
             'playlist' => $playlist,
             'playlistcategories' => $playlistCategories,
             'playlistformations' => $playlistFormations
         ]);        
-    }    
+    }       
     
 }

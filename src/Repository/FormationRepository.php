@@ -108,19 +108,4 @@ class FormationRepository extends ServiceEntityRepository
                 ->getResult();        
     }
     
-    /**
-     * Retourne le nombre de formations d'une playlist
-     * @param type $idPlaylist
-     * @return int
-     */
-    public function nbFormationByOnePlaylist($idPlaylist): int{
-        return $this->createQueryBuilder('f')
-                ->select('COUNT(f)')
-                ->join('f.playlist', 'p')
-                ->where('p.id=:id')
-                ->setParameter('id', $idPlaylist)
-                ->getQuery()
-                ->getSingleScalarResult();
-    }
-        
 }
